@@ -2,7 +2,7 @@ const cors = require("cors");
 const http = require("http");
 const { Server } = require("socket.io");
 const express = require("express");
-const port = 4000 
+const port = process.env.PORT || 4000;
 
 const app = express();
 app.use(cors());
@@ -23,7 +23,7 @@ io.on("connection", (socket) => {
     socket.join(roomId);
     if (!UserInRoom[roomId]) UserInRoom[roomId] = [];
 
-    const user = { socketId: socket.id, name:username };
+    const user = { socketId: socket.id, name: username };
     UserInRoom[roomId].push(user);
     // console.log("USer - -", user);
     io.to(roomId).emit("users-in-room", UserInRoom[roomId]);
