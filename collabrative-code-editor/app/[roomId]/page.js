@@ -7,7 +7,7 @@ import { useParams } from "next/navigation";
 import { html } from "@codemirror/lang-html";
 import { useSession } from "next-auth/react";
 
-const page = () => {
+const Page = () => {
   const { data: session } = useSession();
   const params = useParams();
   const roomId = params.roomId;
@@ -98,4 +98,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
