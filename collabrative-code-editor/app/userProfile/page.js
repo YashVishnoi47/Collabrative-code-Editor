@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-const userProfile = () => {
+const UserProfile = () => {
   const { data: session } = useSession();
   const [rooms, setRooms] = useState([]);
   // Fetching User Rooms
@@ -78,4 +78,4 @@ const userProfile = () => {
   );
 };
 
-export default userProfile;
+export default UserProfile;
