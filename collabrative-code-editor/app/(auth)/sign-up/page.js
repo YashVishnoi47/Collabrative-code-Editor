@@ -33,7 +33,7 @@ export default function SignUp() {
     <div className="w-full h-screen gap-4 flex flex-col justify-center items-center border-2 border-red-600">
       <h1 className="text-3xl font-bold">Sign Up</h1>
       <form
-        className="flex flex-col w-[35%] rounded-2xl border-2 border-black h-[80%] border-2 gap-5 justify-center items-center"
+        className="flex flex-col w-[35%] rounded-2xl  border-black h-[80%] border-2 gap-5 justify-center items-center"
         onSubmit={handleSignUp}
       >
         <input
