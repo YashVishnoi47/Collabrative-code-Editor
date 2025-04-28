@@ -64,7 +64,7 @@ const UserProfile = () => {
           <div className="w-full -b-2 py-2 mt-2 flex flex-col gap-2">
             <h1 className="text-3xl font-bold">
               {" "}
-              <span className="capitalize">{session?.user.userName}</span>'s
+              <span className="capitalize">{session?.user.userName}</span>s
               Rooms
             </h1>
             <p className="text-gray-500">Total Rooms - {rooms.length}</p>
