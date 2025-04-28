@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
-
+import SearchBar from "@/components/utilityComponents/SearchBar";
+import Button2 from "@/components/utilityComponents/Button2";
+import UserRooms from "@/components/UserRooms";
 const UserProfile = () => {
   const { data: session } = useSession();
   const [rooms, setRooms] = useState([]);
@@ -49,31 +50,40 @@ const UserProfile = () => {
   }
 
   return (
-    <div className="w-full h-full flex flex-col gap-12">
-      {/* Profile Bar */}
-      <div className="w-full bg-gray-300 h-52 flex">
-        {/* left side of the profile Bar */}
-        <div className="w-[20%] h-full flex justify-start items-center border-2 border-red-800">
-          <Image
-            src={"/profile.png"}
-            width={150}
-            height={150}
-            alt="profile"
-          ></Image>
+    <div className="w-full h-full justify-center items-center flex flex-col gap-12">
+      <div className="w-[80%] flex flex-col min-h-[90vh] mt-10 -2 border-black">
+        {/* top section */}
+        <div className="w-full border-b-2 py-2 justify-between flex items-center  h-[10vh]">
+          <SearchBar />
+          <Button2 text={"Join Room"} />
+        </div>
+
+        {/* Bottom Section */}
+        <div className="w-full flex flex-col items-start h-[90vh] -2 border-red-700">
+          {/* Header Text */}
+          <div className="w-full -b-2 py-2 mt-2 flex flex-col gap-2">
+            <h1 className="text-3xl font-bold">
+              {" "}
+              <span className="capitalize">{session?.user.userName}</span>'s
+              Rooms
+            </h1>
+            <p className="text-gray-500">Total Rooms - {rooms.length}</p>
+          </div>
+          {/* User Rooms */}  
+          <div className="rooms mt-6 flex flex-col gap-4 w-full h-full items-center  flex-wrap">
+            {rooms.length > 0 ? (
+              <div className="flex flex-wrap w-full justify-center  sm:justify-start items-center gap-8">
+                {rooms.map((room) => (
+                 <UserRooms key={room._id} room={room} />
+                ))}
+              </div>
+            ) : (
+              <p>No rooms found</p>
+            )}
+            
+          </div>
         </div>
       </div>
-
-      {rooms.length > 0 ? (
-        <ul className="flex flex-col gap-12">
-          {rooms.map((room) => (
-            <Link href={`${room.roomID}`} key={room._id}>
-              {room.roomName}
-            </Link>
-          ))}
-        </ul>
-      ) : (
-        <p>No rooms found</p>
-      )}
     </div>
   );
 };

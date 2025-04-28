@@ -15,9 +15,9 @@ const io = new Server(server, {
     // origin: "http://localhost:3000",
     origin: "https://collabrative-code-editor.vercel.app/",
     methods: ["GET", "POST"],
-    // credentials: true,
+    credentials: true,
   },
-  transports: ['websocket'],
+  // transports: ['websocket'],
 });
 
 io.on("connection", (socket) => {
@@ -50,5 +50,5 @@ io.on("connection", (socket) => {
 });
 
 server.listen(port, () => {
-  console.log("Server is running on port 4000");
+  console.log(`Server is running on port ${port}`);
 });
