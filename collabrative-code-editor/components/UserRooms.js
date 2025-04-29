@@ -3,15 +3,18 @@ import { formatDate } from "@/lib/utils";
 import React from "react";
 import { useRouter } from "next/navigation";
 
-const UserRooms = ({ room }) => {
-    const router = useRouter();
+const UserRooms = ({ room, index }) => {
+  const router = useRouter();
 
-    const handleClick = () => {
-        router.push(`${room.roomID}`);
-    }
+  const handleClick = () => {
+    router.push(`${room.roomID}`);
+  };
 
   return (
-    <div onClick={handleClick} className="min-w-[350px] cursor-pointer flex flex-col rounded-3xl h-[300px] border-1 hover:shadow-2xl transition-all duration-300 ease-in-out">
+    <div
+      onClick={handleClick}
+      className="min-w-[350px] hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex flex-col rounded-3xl h-[300px] border-1 hover:shadow-2xl transition-all duration-300 ease-in-out"
+    >
       {/* Room Image */}
       <div className="w-full h-[65%] relative bg-gray-500 rounded-3xl"></div>
 

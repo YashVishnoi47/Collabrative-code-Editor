@@ -1,38 +1,16 @@
 import React from 'react';
-import styled from 'styled-components';
 
 const SearchBar = () => {
   return (
-    <StyledWrapper>
-      <input placeholder="Searth the internet..." type="text" name="text" className="input" />
-    </StyledWrapper>
+    <div className="w-full max-w-[300px]">
+      <input
+        placeholder="Search..."
+        type="text"
+        name="text"
+        className="w-full h-[45px] px-5 rounded-2xl border border-gray-300 outline-none transition-all duration-300 ease-[cubic-bezier(0.19,1,0.22,1)] shadow-[0px_0px_20px_-18px_rgba(0,0,0,0.5)] hover:border-2 hover:shadow-[0px_0px_20px_-17px_rgba(0,0,0,0.5)] active:scale-[0.95] focus:border-gray-500"
+      />
+    </div>
   );
-}
-
-const StyledWrapper = styled.div`
-  .input {
-    width: 100%;
-    max-width: 250px;
-    height: 45px;
-    padding: 20px;
-    border-radius: 100px;
-    border: 1.5px solid lightgrey;
-    outline: none;
-    transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-    box-shadow: 0px 0px 20px -18px;
-  }
-
-  .input:hover {
-    border: 2px solid lightgrey;
-    box-shadow: 0px 0px 20px -17px;
-  }
-
-  .input:active {
-    transform: scale(0.95);
-  }
-
-  .input:focus {
-    border: 2px solid grey;
-  }`;
+};
 
 export default SearchBar;
