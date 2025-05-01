@@ -1,11 +1,11 @@
 "use client";
 import { SocketContext } from "@/context/SocketContext";
 import React, { useContext, useEffect, useState } from "react";
-import CodeMirror from "@uiw/react-codemirror";
-import { javascript } from "@codemirror/lang-javascript";
 import { useParams } from "next/navigation";
-import { html } from "@codemirror/lang-html";
 import { useSession } from "next-auth/react";
+import CodeMirror from "@uiw/react-codemirror";
+import { html } from "@codemirror/lang-html";
+import { javascript } from "@codemirror/lang-javascript";
 
 const Page = () => {
   const { data: session } = useSession();
@@ -19,6 +19,7 @@ const Page = () => {
   const randomName = "testUser-" + Math.floor(Math.random() * 1000);
   const userName = session?.user.userName || randomName;
 
+  // All the socket events are handled here.
   useEffect(() => {
     if (!socket) {
       console.log("⚠️ Socket not available yet...");
@@ -41,6 +42,7 @@ const Page = () => {
     };
   }, [socket, roomId]);
 
+  // This function is called when the code in the editor changes.
   const handleCodeChange = (value, viewUpdate) => {
     setCode(value);
     socket.emit("code-change", {
@@ -50,8 +52,8 @@ const Page = () => {
     });
   };
 
-  if(!roomId || roomId === "undefined"){
-    return <div>No Room Available</div>
+  if (!roomId || roomId === "undefined") {
+    return <div>No Room Available</div>;
   }
 
   return (
@@ -60,7 +62,7 @@ const Page = () => {
       <CodeMirror
         value={code}
         height="300px"
-        extensions={[html()]}
+        extensions={[javascript()]}
         onChange={handleCodeChange}
         theme="light"
       />

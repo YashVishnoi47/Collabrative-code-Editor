@@ -5,10 +5,6 @@ const roomSchema = new Schema({
     type: String,
     required: true,
   },
-  roomID: {
-    type: String,
-    required: true,
-  },
   codingLang: {
     type: String,
     required: true,

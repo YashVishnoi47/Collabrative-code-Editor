@@ -1,13 +1,13 @@
 "use client";
-import { formatDate } from "@/lib/utils";
 import React from "react";
 import { useRouter } from "next/navigation";
+import { formatDate } from "@/lib/utils";
 
 const UserRooms = ({ room, index }) => {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`${room.roomID}`);
+    router.push(`${room._id}`);
   };
 
   return (

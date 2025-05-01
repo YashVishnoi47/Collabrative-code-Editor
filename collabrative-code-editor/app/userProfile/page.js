@@ -9,58 +9,98 @@ import UserRooms from "@/components/UserRooms";
 import Loader from "@/components/utilityComponents/Loader";
 import { useRouter } from "next/navigation";
 import shortUUID from "short-uuid";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { roommFormSchema } from "@/lib/validator";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+
+import { Button } from "@/components/ui/button";
 
 const UserProfile = () => {
   const { data: session } = useSession();
-  const [uniqueId, setUniqueId] = useState(null);
   const router = useRouter();
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(false);
 
-  // Fetching User Rooms
+  const form = useForm({
+    resolver: zodResolver(roommFormSchema),
+    defaultValues: {
+      roomName: "",
+      codingLang: "",
+      idPublic: false,
+    },
+  });
+
+  // Fetching User Rooms When the session is available.
   useEffect(() => {
     const FetchUserRooms = async () => {
       try {
+        setFetching(true);
         const res = await fetch("/api/room/fetchRoom");
         if (!res.ok) {
           throw new Error("Failed To fetch room");
         }
 
         const data = await res.json();
+        if (data) {
+          setFetching(false);
+        }
         setRooms(data.rooms);
       } catch (error) {
         console.error("Fetch User Error", error);
+        setFetching(false);
       }
     };
 
     FetchUserRooms();
   }, [session]);
 
-  // Creating  prrivate coding Rooms
-  const createPrivateRoom = async (e) => {
-    e.preventDefault();
-
-    const id = shortUUID.generate();
-    if (id) {
-      setLoading(true);
-    }
-    setUniqueId(id);
+  // Creating prrivate coding Rooms
+  const createPrivateRoom = async (values) => {
+    setLoading(true);
 
     const res = await fetch("/api/room/createRoom", {
       method: "POST",
       body: JSON.stringify({
-        roomName: "My Room",
-        codingLang: "JavaScript",
-        roomID: id,
+        roomName: values.roomName,
+        codingLang: values.codingLang,
+        // roomID: id,
       }),
     });
 
     if (res.ok) {
       setLoading(false);
-      router.push(`/${id}`);
+      // router.push(`${data._id}`)
     } else {
-      // const { message } = await res.json();
-      alert("message");
+      alert("Error creating room");
+      setLoading(false);
     }
   };
 
@@ -110,13 +150,102 @@ const UserProfile = () => {
             </div>
             <div className="w-1/2 flex justify-end items-center">
               <div className="flex gap-4">
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <div>
+                      <Button2
+                        // createPrivateRoom={createPrivateRoom}
+                        loading={loading}
+                        width={"120px"}
+                        text={"Create Room"}
+                      />
+                    </div>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle className={`font-semibold text-2xl`}>
+                        Create Room
+                      </DialogTitle>
+                      <DialogDescription asChild>
+                        <Form {...form}>
+                          <form
+                            onSubmit={form.handleSubmit(createPrivateRoom)}
+                            className="space-y-8"
+                          >
+                            {/* Room Name */}
+                            <FormField
+                              control={form.control}
+                              name="roomName"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>RoomName</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="RoomName" {...field} />
+                                  </FormControl>
+                                  <FormDescription></FormDescription>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+
+                            {/* Language */}
+                            <FormField
+                              control={form.control}
+                              name="codingLang"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Select Room Language</FormLabel>
+                                  <FormControl>
+                                    {/* <Select
+                                      // value={field.value}
+                                      defaultValue="javascript"
+                                    >
+                                      <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Language" />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="javascript">
+                                          Javascript
+                                        </SelectItem>
+                                        <SelectItem value="html">
+                                          HTML
+                                        </SelectItem>
+                                        <SelectItem value="css">CSS</SelectItem>
+                                      </SelectContent>
+                                    </Select> */}
+                                    <select
+                                      value={field.value}
+                                      onChange={(e) =>
+                                        field.onChange(e.target.value)
+                                      }
+                                      id="tech"
+                                      name="tech"
+                                    >
+                                      <option value="javascript">
+                                        JavaScript
+                                      </option>
+                                      <option value="html">HTML</option>
+                                      <option value="css">CSS</option>
+                                    </select>
+                                  </FormControl>
+                                  <FormDescription></FormDescription>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+
+                            <button type="submit">Submit</button>
+                          </form>
+                        </Form>
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
+
                 <Button2
                   createPrivateRoom={createPrivateRoom}
-                  loading={loading}
-                  width={"120px"}
-                  text={"Create Room"}
+                  text={"Join Room"}
                 />
-                <Button2 text={"Join Room"} />
               </div>
             </div>
           </div>
@@ -124,14 +253,18 @@ const UserProfile = () => {
           {/* User Rooms */}
           <div className="rooms mt-6 flex flex-col gap-4 w-full h-full items-center  flex-wrap">
             {rooms.length > 0 ? (
-              <div className="flex flex-wrap w-full justify-center  sm:justify-start items-center gap-8">
+              <div className="flex flex-wrap w-full justify-center sm:justify-start items-center gap-8">
                 {rooms.map((room) => (
                   <UserRooms key={room._id} room={room} />
                 ))}
               </div>
             ) : (
               <div className="w-full h-1/2 flex justify-center items-center">
-                <Loader />
+                {fetching ? <Loader /> :(
+                  <h1 className="text-2xl font-semibold text-gray-500">
+                    No Rooms Found
+                  </h1>
+                )}
               </div>
             )}
           </div>

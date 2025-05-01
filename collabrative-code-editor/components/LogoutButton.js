@@ -1,6 +1,6 @@
 "use client"
 import { signOut, useSession } from "next-auth/react";
-
+import Button2 from "./utilityComponents/Button2";
 const LogoutButton = () => {
   const { data: session } = useSession();
 
@@ -12,3 +12,7 @@ const LogoutButton = () => {
 };
 
 export default LogoutButton;
+
+
+
+

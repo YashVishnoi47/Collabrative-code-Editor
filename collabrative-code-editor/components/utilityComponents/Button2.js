@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-const Button = ({ text, width, createPrivateRoom, loading }) => {
+const Button2 = ({ text, width, createPrivateRoom, loading }) => {
   return (
     <StyledWrapper onClick={createPrivateRoom}>
       <button className={width}>{text}</button>
@@ -28,4 +28,4 @@ const StyledWrapper = styled.div`
   }
 `;
 
-export default Button;
+export default Button2;
