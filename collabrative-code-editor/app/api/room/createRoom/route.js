@@ -22,7 +22,6 @@ export const POST = async (req) => {
       roomName,
       codingLang,
       createdBy,
-      // roomID,
     });
 
     if (newRoom) {

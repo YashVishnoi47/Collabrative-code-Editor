@@ -11,10 +11,10 @@ export async function middleware(request) {
 
   if(token) {
     if (url.pathname === "/sign-in" || url.pathname === "/sign-up") {
-      return NextResponse.redirect(new URL("/profile", request.url));
+      return NextResponse.redirect(new URL("/userProfile", request.url));
     }
   }
-  return NextResponse.redirect(new URL("/home", request.url));
+  return NextResponse.redirect(new URL("/sign-in", request.url));
 }
 
 export const config = {

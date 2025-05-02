@@ -23,7 +23,7 @@ export const GET = async () => {
     if (rooms.length > 0) {
       return NextResponse.json({ rooms }, { status: 200 });
     } else {
-      return Response.json({ message: "Room Not Found" }, { status: 404 });
+      return NextResponse.json({ message: "No Rooms Created" }, { status: 200 });
     }
   } catch (error) {
     console.error("Error fetching room:", error);

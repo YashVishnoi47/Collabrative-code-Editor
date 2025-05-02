@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import Link from "next/link";
@@ -64,17 +64,17 @@ const UserProfile = () => {
       try {
         setFetching(true);
         const res = await fetch("/api/room/fetchRoom");
-        if (!res.ok) {
-          throw new Error("Failed To fetch room");
-        }
 
         const data = await res.json();
+        console.log("User Rooms", data);
+
         if (data) {
           setFetching(false);
         }
-        setRooms(data.rooms);
+        setRooms(data.rooms || []);
       } catch (error) {
         console.error("Fetch User Error", error);
+        setRooms([]);
         setFetching(false);
       }
     };
@@ -91,13 +91,13 @@ const UserProfile = () => {
       body: JSON.stringify({
         roomName: values.roomName,
         codingLang: values.codingLang,
-        // roomID: id,
       }),
     });
 
     if (res.ok) {
+      triggerRef.current?.click();
+      router.refresh();
       setLoading(false);
-      // router.push(`${data._id}`)
     } else {
       alert("Error creating room");
       setLoading(false);
@@ -154,7 +154,6 @@ const UserProfile = () => {
                   <DialogTrigger asChild>
                     <div>
                       <Button2
-                        // createPrivateRoom={createPrivateRoom}
                         loading={loading}
                         width={"120px"}
                         text={"Create Room"}
@@ -260,7 +259,9 @@ const UserProfile = () => {
               </div>
             ) : (
               <div className="w-full h-1/2 flex justify-center items-center">
-                {fetching ? <Loader /> :(
+                {fetching ? (
+                  <Loader />
+                ) : (
                   <h1 className="text-2xl font-semibold text-gray-500">
                     No Rooms Found
                   </h1>

@@ -16,8 +16,12 @@ export const authOptions = {
       async authorize(credentials, req) {
         await connectDB();
         try {
+          if (!credentials?.email || !credentials?.password) {
+            return null;
+          }
+
           const user = await User.findOne({
-            email: credentials.email,
+            email: credentials?.email,
           });
           if (!user) {
             throw new Error("No user found with the given credentials.");
@@ -35,6 +39,7 @@ export const authOptions = {
           }
         } catch (error) {
           throw new Error(error);
+          return null;
         }
       },
     }),
