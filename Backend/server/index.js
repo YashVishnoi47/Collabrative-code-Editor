@@ -33,9 +33,9 @@ io.on("connection", (socket) => {
     console.log(`User Joined Room: ${roomId}`);
   });
 
-  socket.on("code-change", ({ roomId, code }) => {
+  socket.on("code-change", ({ roomId, code, file, lang }) => {
     // console.log(`Received code change for docId: ${code}`);
-    socket.to(roomId).emit("changes", code);
+    socket.to(roomId).emit("changes", { code, file, lang });
   });
 
   socket.on("disconnect", () => {

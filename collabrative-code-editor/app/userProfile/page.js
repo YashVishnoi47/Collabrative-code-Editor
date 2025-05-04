@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import Link from "next/link";
@@ -8,12 +8,9 @@ import Button2 from "@/components/utilityComponents/Button2";
 import UserRooms from "@/components/UserRooms";
 import Loader from "@/components/utilityComponents/Loader";
 import { useRouter } from "next/navigation";
-import shortUUID from "short-uuid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { roommFormSchema } from "@/lib/validator";
-
 import {
   Dialog,
   DialogContent,
@@ -32,15 +29,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
-import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const UserProfile = () => {
   const { data: session } = useSession();
@@ -48,6 +42,7 @@ const UserProfile = () => {
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(false);
+  const [joinRoomId, setjoinRoomId] = useState("");
 
   const form = useForm({
     resolver: zodResolver(roommFormSchema),
@@ -95,13 +90,22 @@ const UserProfile = () => {
     });
 
     if (res.ok) {
-      triggerRef.current?.click();
       router.refresh();
       setLoading(false);
     } else {
       alert("Error creating room");
       setLoading(false);
     }
+  };
+
+  // Funtion to Join a room with room ID.
+  const handleJoinRoom = async () => {
+    if (!joinRoomId) {
+      alert("Please enter a room ID to join.");
+      return;
+    }
+
+    router.push(`/${joinRoomId}`);
   };
 
   if (!session) {
@@ -195,23 +199,6 @@ const UserProfile = () => {
                                 <FormItem>
                                   <FormLabel>Select Room Language</FormLabel>
                                   <FormControl>
-                                    {/* <Select
-                                      // value={field.value}
-                                      defaultValue="javascript"
-                                    >
-                                      <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Language" />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        <SelectItem value="javascript">
-                                          Javascript
-                                        </SelectItem>
-                                        <SelectItem value="html">
-                                          HTML
-                                        </SelectItem>
-                                        <SelectItem value="css">CSS</SelectItem>
-                                      </SelectContent>
-                                    </Select> */}
                                     <select
                                       value={field.value}
                                       onChange={(e) =>
@@ -223,8 +210,10 @@ const UserProfile = () => {
                                       <option value="javascript">
                                         JavaScript
                                       </option>
-                                      <option value="html">HTML</option>
-                                      <option value="css">CSS</option>
+                                      <option value="html">Python</option>
+                                      <option value="webDev">
+                                        HTML, CSS and JAVASCRIPT
+                                      </option>
                                     </select>
                                   </FormControl>
                                   <FormDescription></FormDescription>
@@ -241,10 +230,46 @@ const UserProfile = () => {
                   </DialogContent>
                 </Dialog>
 
-                <Button2
-                  createPrivateRoom={createPrivateRoom}
-                  text={"Join Room"}
-                />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <div>
+                      <Button2 text={"Join Room"} />
+                    </div>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <div className="flex flex-col gap-6 p-6 ">
+                      <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
+                        Join a Room
+                      </h1>
+
+                      <div className="flex flex-col gap-2">
+                        <label
+                          htmlFor="room-id"
+                          className="text-sm font-medium text-gray-700"
+                        >
+                          Room Key
+                        </label>
+                        <Input
+                          onChange={(e) => {
+                            setjoinRoomId(e.target.value);
+                          }}
+                          id="room-id"
+                          placeholder="Enter your Room ID"
+                          className="text-sm"
+                        />
+                        <p className="text-xs text-gray-500">
+                          Ask the host for the room key to join.
+                        </p>
+                      </div>
+
+                      <button
+                        onClick={handleJoinRoom}
+                        text={"Join Room"}
+                        className="w-full border-2 p-2 rounded-full cursor-pointer"
+                      >Join Room</button>
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </div>
             </div>
           </div>

@@ -11,7 +11,6 @@ const Navbar = () => {
   const { data: session } = useSession();
   const router = useRouter();
 
-
   return (
     <div className="flex justify-center items-center bg-white w-full h-16">
       <div className="w-[40%] -2 h-full gap-8 flex justify-start items-center">

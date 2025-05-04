@@ -5,6 +5,7 @@ export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
+
 export function formatDate(isoString) {
   const date = new Date(isoString);
 
@@ -15,7 +16,4 @@ export function formatDate(isoString) {
     // hour: '2-digit',
     // minute: '2-digit',
     // hour12: true,
-  };
-
-  return date.toLocaleString('en-US', options);
-}
+  }}
